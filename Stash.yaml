@@ -1,6 +1,6 @@
 # Stash 主配置：配合本地私密覆写使用。
 # 源配置作者：Repcz（https://github.com/Repcz/Tool），由上传的主配置及覆写整理。
-# 所有真实订阅地址、SOCKS5 凭据和 Tailscale auth-key 均留在本地覆写中。
+# 真实订阅地址与 SOCKS5 凭据留在本地覆写中；Tailscale 在各设备内交互登录。
 # 使用前先导入本地私密覆写；切换后停用原六份覆写，避免重复合并。
 
 mode: rule

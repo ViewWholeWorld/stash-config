@@ -29,16 +29,32 @@
 - 将订阅集引用统一为 `WestData`，修复 `Subscribe` 在远程覆写替换后不存在的问题。
 - 地区组显式引用 `WestData`，保留原有地区筛选与测速，避免本地代理进入链式入口形成循环。
 - 苹果服务按原苹果代理覆写交给 `Manual`，合并重复的 Apple 规则集声明。
-- Tailscale 密钥、节点主机名、静态 SOCKS5 凭据、订阅地址和个人内网规则全部保留在本地文件。
+- 静态 SOCKS5 凭据、订阅地址和个人内网规则保留在本地文件；Tailscale 节点省略 `auth-key` 和 `hostname`，在每台设备内独立登录。
 - 原 `fake-ip-filter` 保留，包括其中的 `*`，此次不改变 DNS 过滤语义。
 - 公共业务规则沿用原 Repcz 链接，每天更新；GFWList 使用 Loyalsoldier 的域名转换版，每 6 小时检查更新。
 
 规则先匹配本地覆写中的个人内网规则，再匹配主配置中的自定义直连、苹果服务和原有业务分流；GFWList 位于 LAN 规则之后、`GEOIP,CN,DIRECT` 和 `MATCH,Final` 之前。GFWList 命中后交给 `Global`，实际出口由该策略组选择决定。
 
+## 多台设备使用 Tailscale
+
+本地覆写中的 Tailscale 节点只保留：
+
+```yaml
+proxies:
+  - name: beans
+    type: tailscale
+```
+
+每台设备分别导入本地覆写与主配置后，在 Stash 的代理列表打开 `beans` 节点菜单，进入 `Tailscale` 页面，点击开始认证并完成登录。认证身份保存在各设备本地，已认证的节点通常无需在每次更新配置后重新登录。交互登录需要 iOS/tvOS 3.4+ 或 macOS 4.2+。
+
+`name: beans` 是本配置中的节点标签，可以在不同设备共用。省略 `hostname` 后，Stash 使用系统报告的设备主机名；系统没有提供时，由控制服务器命名。配置不再把所有设备强制命名为同一个 hostname。如果几台设备本身的系统名称相同，可给系统设置不同名称，或仅在各设备本地覆写的 Tailscale 节点中指定不同 `hostname`，例如 `stash-iphone`、`stash-ipad`、`stash-mac`。
+
+不要在共享配置中重新添加 `auth-key` 或固定的 `hostname`。支持参数及登录流程见 [Stash Tailscale 文档](https://stash.wiki/proxy-protocols/proxy-types#tailscale)。
+
 ## 维护
 
 - 修改策略组或规则顺序：编辑 `Stash.yaml`，然后在 Stash 更新该配置。
-- 修改真实订阅、密码或 Tailscale 密钥：只编辑设备中的本地私密覆写。
+- 修改真实订阅或静态 SOCKS5 凭据：只编辑设备中的本地私密覆写。
 - 新增机场：在本地覆写新增 provider，并在主配置中调整对应 `use`；不上传真实订阅链接。
 - 不将原始附件或导出的完整配置提交到仓库；`.gitignore` 仅防止常见误提交，不会清除已经进入历史的秘密。
 

@@ -17,8 +17,6 @@ proxies: #!replace
   dialer-proxy: 链式入口
 - name: beans
   type: tailscale
-  auth-key: REPLACE_WITH_TAILSCALE_AUTH_KEY
-  hostname: stash-device
 rules:
 - DOMAIN-SUFFIX,internal.example.invalid,DIRECT
 - IP-CIDR,100.64.0.0/10,tailscale,no-resolve
