@@ -33,7 +33,7 @@
 - 原 `fake-ip-filter` 保留，包括其中的 `*`，此次不改变 DNS 过滤语义。
 - 公共业务规则沿用原 Repcz 链接，每天更新；GFWList 使用 Loyalsoldier 的域名转换版，每 6 小时检查更新。
 
-规则先匹配本地覆写中的个人内网和自定义直连规则，再匹配主配置中的苹果服务和原有业务分流；GFWList 位于 LAN 规则之后、`GEOIP,CN,DIRECT` 和 `MATCH,Final` 之前。GFWList 命中后交给 `Global`，实际出口由该策略组选择决定。
+规则先匹配本地覆写中的个人内网和自定义直连规则，再匹配主配置中的苹果服务和原有业务分流；GFWList 位于 LAN 规则之后、`GEOIP,CN,DIRECT` 和 `MATCH,Final` 之前。GFWList 命中后交给独立的 `GFWList` 策略组，可单独选择 Global、Manual、静态 IP、地区组或 DIRECT；默认首选 Global，保持原有分流行为。
 
 ## 任意订阅集名称与多个机场
 
@@ -80,3 +80,4 @@ proxies:
 GFWList 域名转换版源自 [Loyalsoldier/clash-rules](https://github.com/Loyalsoldier/clash-rules)。它是域名列表，不完整保留 AutoProxy 的 URL 路径、关键词和正则语义。
 
 本次已验证 YAML、覆写合并后的引用、链式代理依赖及真实敏感值隔离；未在实际 Stash 客户端连接测试。
+
