@@ -1,0 +1,16 @@
+# 真实私密设置不进入版本历史
+local/
+private/
+secrets/
+private-deliverables/
+upload/
+*.local.stoverride
+*.private.stoverride
+本地私密设置.stoverride
+远程代理.stoverride
+静态ip.stoverride
+tailscale.stoverride
+Stash(1).yaml
+.env
+.env.*
+!.env.example

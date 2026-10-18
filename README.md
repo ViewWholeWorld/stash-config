@@ -1,1 +1,50 @@
-# stash-config
+# Stash 配置
+
+公开主配置与本地私密覆写配合使用。仓库仅保存无真实密钥的配置和占位示例。
+
+## 文件
+
+| 文件 | 用途 |
+| --- | --- |
+| `Stash.yaml` | 主配置、业务策略组、DNS、公共规则集和 GFWList 补充分流 |
+| `local.example.stoverride` | 本地私密覆写的填写示例，不含真实凭据 |
+
+真实的 `本地私密设置.stoverride` 单独保存，不在此仓库中。
+
+## 导入
+
+1. 在 Stash 中先导入并启用单独提供的 `本地私密设置.stoverride`。它提供 `WestData` 订阅集、`静态IP` 与 Tailscale 节点，以及个人内网规则。
+2. 从以下地址导入新的主配置（仓库须公开，才能匿名下载）：
+
+   `https://raw.githubusercontent.com/ViewWholeWorld/stash-config/main/Stash.yaml`
+
+3. 切换到新主配置时，停用原来的静态 IP、Tailscale、DNS、苹果代理、路由规则、远程代理六份覆写，仅保留新的本地私密覆写，避免数组重复合并和旧策略组覆盖。
+4. 连接后检查订阅是否加载，核对 AI、社交、Emby 等策略组的选择。主配置保留原静态 IP 覆写里的候选顺序；设备原有选择不保证在切换配置后完全继承。
+
+主配置依赖本地覆写提供节点与订阅集，不能单独作为完整配置启动。示例中的占位地址和密钥不可直接使用。新设备需要单独导入真实本地覆写；日常更新主配置无需重新填写凭据。
+
+## 整理内容
+
+- 合并原主配置、DNS 加密、苹果代理、路由规则和链式代理策略组。
+- 将订阅集引用统一为 `WestData`，修复 `Subscribe` 在远程覆写替换后不存在的问题。
+- 地区组显式引用 `WestData`，保留原有地区筛选与测速，避免本地代理进入链式入口形成循环。
+- 苹果服务按原苹果代理覆写交给 `Manual`，合并重复的 Apple 规则集声明。
+- Tailscale 密钥、节点主机名、静态 SOCKS5 凭据、订阅地址和个人内网规则全部保留在本地文件。
+- 原 `fake-ip-filter` 保留，包括其中的 `*`，此次不改变 DNS 过滤语义。
+- 公共业务规则沿用原 Repcz 链接，每天更新；GFWList 使用 Loyalsoldier 的域名转换版，每 6 小时检查更新。
+
+规则先匹配本地覆写中的个人内网规则，再匹配主配置中的自定义直连、苹果服务和原有业务分流；GFWList 位于 LAN 规则之后、`GEOIP,CN,DIRECT` 和 `MATCH,Final` 之前。GFWList 命中后交给 `Global`，实际出口由该策略组选择决定。
+
+## 维护
+
+- 修改策略组或规则顺序：编辑 `Stash.yaml`，然后在 Stash 更新该配置。
+- 修改真实订阅、密码或 Tailscale 密钥：只编辑设备中的本地私密覆写。
+- 新增机场：在本地覆写新增 provider，并在主配置中调整对应 `use`；不上传真实订阅链接。
+- 不将原始附件或导出的完整配置提交到仓库；`.gitignore` 仅防止常见误提交，不会清除已经进入历史的秘密。
+
+## 来源
+
+基础配置和业务规则源自 [Repcz/Tool](https://github.com/Repcz/Tool)，保留原作者来源；图标沿用上传配置中的原链接。
+GFWList 域名转换版源自 [Loyalsoldier/clash-rules](https://github.com/Loyalsoldier/clash-rules)。它是域名列表，不完整保留 AutoProxy 的 URL 路径、关键词和正则语义。
+
+本次已验证 YAML、覆写合并后的引用、链式代理依赖及真实敏感值隔离；未在实际 Stash 客户端连接测试。

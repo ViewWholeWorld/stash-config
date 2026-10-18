@@ -1,0 +1,24 @@
+# 仅为占位示例；真实值保存在仓库外的本地覆写。
+name: 本地私密设置（示例）
+desc: 复制到仓库外并填写真实信息；示例中的占位值不可直接使用。
+proxy-providers: #!replace
+  WestData:
+    url: https://example.invalid/replace-with-your-subscription-url
+    benchmark-url: http://1.1.1.1/generate_204
+    benchmark-timeout: 5
+    interval: 86400
+proxies: #!replace
+- name: 静态IP
+  type: socks5
+  server: proxy.example.invalid
+  port: 1080
+  username: REPLACE_WITH_USERNAME
+  password: REPLACE_WITH_PASSWORD
+  dialer-proxy: 链式入口
+- name: beans
+  type: tailscale
+  auth-key: REPLACE_WITH_TAILSCALE_AUTH_KEY
+  hostname: stash-device
+rules:
+- DOMAIN-SUFFIX,internal.example.invalid,DIRECT
+- IP-CIDR,100.64.0.0/10,tailscale,no-resolve
