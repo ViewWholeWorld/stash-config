@@ -6,14 +6,14 @@
 
 | 文件 | 用途 |
 | --- | --- |
-| `Stash.yaml` | 主配置、业务策略组、DNS、公共规则集和 GFWList 补充分流 |
+| `Stash.yaml` | 通用主配置、业务策略组、DNS、公共规则集和 GFWList 补充分流 |
 | `local.example.stoverride` | 本地私密覆写的填写示例，不含真实凭据 |
 
 真实的 `本地私密设置.stoverride` 单独保存，不在此仓库中。
 
 ## 导入
 
-1. 在 Stash 中先导入并启用单独提供的 `本地私密设置.stoverride`。它提供 `WestData` 订阅集、`静态IP` 与 Tailscale 节点，以及个人内网规则。
+1. 在 Stash 中先导入并启用单独提供的 `本地私密设置.stoverride`。它提供你自己的订阅集、`静态IP` 与 Tailscale 节点，以及个人内网和自定义直连规则。订阅集可以任意命名，也可以同时配置多个。
 2. 从以下地址导入新的主配置（仓库须公开，才能匿名下载）：
 
    `https://raw.githubusercontent.com/ViewWholeWorld/stash-config/main/Stash.yaml`
@@ -25,15 +25,31 @@
 
 ## 整理内容
 
-- 合并原主配置、DNS 加密、苹果代理、路由规则和链式代理策略组。
-- 将订阅集引用统一为 `WestData`，修复 `Subscribe` 在远程覆写替换后不存在的问题。
-- 地区组显式引用 `WestData`，保留原有地区筛选与测速，避免本地代理进入链式入口形成循环。
+- 合并原主配置、DNS 加密、苹果代理和链式代理策略组；个人内网规则及自定义直连规则留在本地私密覆写。
+- 主配置不使用 `use` 绑定特定订阅集；Manual、Emby 和各地区组通过 `include-all: true` 自动纳入所有代理和订阅集，不依赖订阅集的名称或数量。
+- 地区组保留地区名称和地区代码筛选及自动测速；本地 `静态IP` 与 `beans` 不匹配这些地区筛选，因此不会进入链式入口。Manual 和 Emby 的自动节点列表也会包含本地节点。
 - 苹果服务按原苹果代理覆写交给 `Manual`，合并重复的 Apple 规则集声明。
 - 静态 SOCKS5 凭据、订阅地址和个人内网规则保留在本地文件；Tailscale 节点省略 `auth-key` 和 `hostname`，在每台设备内独立登录。
 - 原 `fake-ip-filter` 保留，包括其中的 `*`，此次不改变 DNS 过滤语义。
 - 公共业务规则沿用原 Repcz 链接，每天更新；GFWList 使用 Loyalsoldier 的域名转换版，每 6 小时检查更新。
 
-规则先匹配本地覆写中的个人内网规则，再匹配主配置中的自定义直连、苹果服务和原有业务分流；GFWList 位于 LAN 规则之后、`GEOIP,CN,DIRECT` 和 `MATCH,Final` 之前。GFWList 命中后交给 `Global`，实际出口由该策略组选择决定。
+规则先匹配本地覆写中的个人内网和自定义直连规则，再匹配主配置中的苹果服务和原有业务分流；GFWList 位于 LAN 规则之后、`GEOIP,CN,DIRECT` 和 `MATCH,Final` 之前。GFWList 命中后交给 `Global`，实际出口由该策略组选择决定。
+
+## 任意订阅集名称与多个机场
+
+主配置中的动态节点组使用 `include-all: true`，不会引用任何固定的订阅集名称。你可以在本地覆写中使用 `ProviderA`、`ProviderB` 或自己喜欢的其他名称；这些名称不需要与主配置同步。
+
+```yaml
+proxy-providers: #!replace
+  ProviderA:
+    url: https://example.invalid/your-first-subscription
+    interval: 86400
+  ProviderB:
+    url: https://example.invalid/your-second-subscription
+    interval: 86400
+```
+
+地区组根据实际节点名称筛选；节点名称没有地区标识时，仍可在 Manual 或 Emby 的完整列表中手动选择。本地节点 `静态IP`、`beans` 和策略组名称是配置内部引用，保留现有名称；不要把静态链式代理改成带地区标识的名字后直接纳入地区组，否则可能形成循环。
 
 ## 多台设备使用 Tailscale
 
@@ -55,7 +71,7 @@ proxies:
 
 - 修改策略组或规则顺序：编辑 `Stash.yaml`，然后在 Stash 更新该配置。
 - 修改真实订阅或静态 SOCKS5 凭据：只编辑设备中的本地私密覆写。
-- 新增机场：在本地覆写新增 provider，并在主配置中调整对应 `use`；不上传真实订阅链接。
+- 重命名订阅集或新增机场：只在本地覆写的 `proxy-providers` 下修改或新增条目，主配置无需修改；不上传真实订阅链接。
 - 不将原始附件或导出的完整配置提交到仓库；`.gitignore` 仅防止常见误提交，不会清除已经进入历史的秘密。
 
 ## 来源

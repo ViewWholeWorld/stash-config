@@ -2,7 +2,7 @@
 name: 本地私密设置（示例）
 desc: 复制到仓库外并填写真实信息；示例中的占位值不可直接使用。
 proxy-providers: #!replace
-  WestData:
+  ProviderA:
     url: https://example.invalid/replace-with-your-subscription-url
     benchmark-url: http://1.1.1.1/generate_204
     benchmark-timeout: 5
