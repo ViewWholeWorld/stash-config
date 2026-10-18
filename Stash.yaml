@@ -50,7 +50,6 @@ proxy-groups:
   - Japan
   - Taiwan
   - DIRECT
-  include-all: true
 - name: Global
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Global.png
   type: select
