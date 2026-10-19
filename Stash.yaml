@@ -96,6 +96,7 @@ proxy-groups:
   - Singapore
   - Japan
   - Taiwan
+  - DIRECT
 - name: Google
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Google_Search.png
   type: select
