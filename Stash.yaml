@@ -164,7 +164,6 @@ proxy-groups:
   - Japan
   - Taiwan
   - DIRECT
-  include-all: true
 - name: Spotify
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Spotify.png
   type: select
