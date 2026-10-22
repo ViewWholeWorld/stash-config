@@ -6,9 +6,26 @@
 mode: rule
 log-level: info
 dns:
+  # 境外 DoH 按规则经自动兜底组转发；节点域名仍由独立 DNS 直连解析。
+  follow-rule: true
   nameserver:
   - https://dns.alidns.com/dns-query
   - https://doh.pub/dns-query
+  fallback:
+  - https://1.1.1.1/dns-query
+  - https://8.8.8.8/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+    - 240.0.0.0/4
+    domain:
+    - +.google.com
+    - +.googleapis.com
+    - +.gstatic.com
+    - +.youtube.com
+    - +.googlevideo.com
+    - +.ytimg.com
   fake-ip-filter:
   - +.lan
   - '*'
@@ -30,10 +47,21 @@ dns:
 proxy-providers: {}
 proxies: []
 proxy-groups:
+- name: 自动兜底
+  type: fallback
+  interval: 120
+  lazy: false
+  proxies:
+  - HongKong
+  - Singapore
+  - Japan
+  - Taiwan
+  - United States
 - name: 链式入口
   type: select
   hidden: false
   proxies:
+  - 自动兜底
   - HongKong
   - United States
   - Singapore
@@ -43,6 +71,7 @@ proxy-groups:
   icon: https://github.com/shindgewongxj/WHATSINStash/raw/main/icon/%24tash.png
   type: select
   proxies:
+  - 自动兜底
   - 静态IP
   - HongKong
   - United States
@@ -191,31 +220,41 @@ proxy-groups:
 - name: HongKong
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png
   type: url-test
-  interval: 300
+  interval: 120
+  tolerance: 50
+  lazy: false
   filter: (?i)🇭🇰|香港|(\b(HK|Hong)\b)
   include-all: true
 - name: United States
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png
   type: url-test
-  interval: 300
+  interval: 120
+  tolerance: 50
+  lazy: false
   filter: (?i)🇺🇸|美国|洛杉矶|圣何塞|(\b(US|United States)\b)
   include-all: true
 - name: Singapore
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png
   type: url-test
-  interval: 300
+  interval: 120
+  tolerance: 50
+  lazy: false
   filter: (?i)🇸🇬|新加坡|狮|(\b(SG|Singapore)\b)
   include-all: true
 - name: Japan
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png
   type: url-test
-  interval: 300
+  interval: 120
+  tolerance: 50
+  lazy: false
   filter: (?i)🇯🇵|日本|东京|(\b(JP|Japan)\b)
   include-all: true
 - name: Taiwan
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png
   type: url-test
-  interval: 300
+  interval: 120
+  tolerance: 50
+  lazy: false
   filter: (?i)🇨🇳|🇹🇼|台湾|(\b(TW|Tai|Taiwan)\b)
   include-all: true
 - name: tailscale
@@ -339,6 +378,10 @@ rule-providers:
     interval: 21600
     url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/gfw.txt
 rules:
+# 使用 IP 地址访问境外 DoH，避免解析 DNS 服务器域名形成依赖循环。
+- IP-CIDR,1.1.1.1/32,自动兜底,no-resolve
+- IP-CIDR,8.8.8.8/32,自动兜底,no-resolve
+- IP-CIDR,223.5.5.5/32,DIRECT,no-resolve
 - RULE-SET,AppleServers,Manual
 - RULE-SET,Direct,DIRECT
 - RULE-SET,Reject,REJECT
