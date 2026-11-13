@@ -14,3 +14,17 @@ Stash(1).yaml
 .env
 .env.*
 !.env.example
+
+# Mihomo 方案暂不进入仓库
+/scripts/
+/tests/
+/deploy/
+/work/
+/docs/mihomo.md
+/docs/deploy-ubuntu.md
+/mihomo.local.example.yaml
+/mihomo.settings.yaml
+/requirements.txt
+.venv/
+__pycache__/
+*.pyc
