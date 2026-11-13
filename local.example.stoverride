@@ -1,0 +1,79 @@
+# 此文件包含私人信息，只导入 Stash 本地，禁止提交到 GitHub。
+name: 本地配置
+desc: 包含真实订阅、静态 SOCKS5 凭据和静态 IP 完整链路测速副本，仅在本地启用；Tailscale 在每台设备内单独登录。禁止上传公开仓库。
+dns:
+  follow-rule: true
+  fallback:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
+    domain:
+      - '+.google.com'
+      - '+.googleapis.com'
+      - '+.gstatic.com'
+      - '+.youtube.com'
+proxy-providers: #!replace
+  ProviderA:
+    url: https://example.invalid/replace-with-your-subscription-url
+    benchmark-url: http://www.gstatic.com/generate_204
+    benchmark-timeout: 5
+    interval: 86400
+  ProviderB:
+    url: https://example.invalid/replace-with-your-subscription-url
+    interval: 86400
+    benchmark-url: http://www.gstatic.com/generate_204
+    benchmark-timeout: 5
+proxies: #!replace
+  - name: 静态IP｜链路｜香港
+    type: socks5
+    server: proxy.example.invalid
+    port: 7078
+    username: REPLACE_WITH_USERNAME
+    password: REPLACE_WITH_PASSWORD
+    dialer-proxy: HongKong
+  - name: 静态IP｜链路｜新加坡
+    type: socks5
+    server: proxy.example.invalid
+    port: 7078
+    username: REPLACE_WITH_USERNAME
+    password: REPLACE_WITH_PASSWORD
+    dialer-proxy: Singapore
+  - name: 静态IP｜链路｜日本
+    type: socks5
+    server: proxy.example.invalid
+    port: 7078
+    username: REPLACE_WITH_USERNAME
+    password: REPLACE_WITH_PASSWORD
+    dialer-proxy: Japan
+  - name: 静态IP｜链路｜台湾
+    type: socks5
+    server: proxy.example.invalid
+    port: 7078
+    username: REPLACE_WITH_USERNAME
+    password: REPLACE_WITH_PASSWORD
+    dialer-proxy: Taiwan
+  - name: 静态IP｜链路｜美国
+    type: socks5
+    server: proxy.example.invalid
+    port: 7078
+    username: REPLACE_WITH_USERNAME
+    password: REPLACE_WITH_PASSWORD
+    dialer-proxy: United States
+  - name: beans
+    type: tailscale
+    dialer-proxy: 链式入口
+    auto-route-disabled: false
+    direct-peer-udp: true
+rules:
+  - DOMAIN-SUFFIX,tailscale.com,Manual
+  - DOMAIN-SUFFIX,tailscale.net,Manual
+  - DOMAIN-SUFFIX,opencode.ai,AI
+  - DOMAIN-SUFFIX,ippure.com,AI
+  - DOMAIN-SUFFIX,tesla.cn,DIRECT
+  - DOMAIN-SUFFIX,douyinpic.com,DIRECT
+  - DOMAIN-SUFFIX,uhdnow.online,DIRECT
+  - DOMAIN-SUFFIX,uhdnow.com,DIRECT
