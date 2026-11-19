@@ -59,19 +59,6 @@ proxy-groups:
   - Japan
   - Taiwan
   - United States
-- name: 链式入口
-  type: select
-  hidden: false
-  proxies:
-  - 自动兜底
-  - 倍率×10
-  - 倍率×3
-  - HongKong
-  - United States
-  - Singapore
-  - Japan
-  - Taiwan
-  - 其他地区
 # 私密覆写注入“静态IP｜链路｜...”节点；每个节点固定一个入口，测速包含完整链路。
 - name: 静态IP
   type: url-test
