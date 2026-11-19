@@ -65,7 +65,7 @@ proxies: #!replace
     dialer-proxy: United States
   - name: beans
     type: tailscale
-    dialer-proxy: 链式入口
+    dialer-proxy: Manual
     auto-route-disabled: false
     direct-peer-udp: true
 rules:
