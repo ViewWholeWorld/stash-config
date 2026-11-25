@@ -50,9 +50,9 @@ proxies: []
 proxy-groups:
 - name: 自动兜底
   type: url-test
-  interval: 120
-  tolerance: 0
-  lazy: false
+  interval: 1800
+  tolerance: 100
+  lazy: true
   proxies:
   - HongKong
   - Singapore
@@ -62,9 +62,9 @@ proxy-groups:
 # 私密覆写注入“静态IP｜链路｜...”节点；每个节点固定一个入口，测速包含完整链路。
 - name: 静态IP
   type: url-test
-  interval: 120
-  tolerance: 0
-  lazy: false
+  interval: 600
+  tolerance: 100
+  lazy: true
   include-all: true
   filter: '(?i)^静态IP｜链路｜'
 - name: Manual
@@ -249,41 +249,41 @@ proxy-groups:
 - name: HongKong
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Hong_Kong.png
   type: url-test
-  interval: 120
-  tolerance: 50
-  lazy: false
+  interval: 600
+  tolerance: 100
+  lazy: true
   filter: '(?i)^(?!.*静态IP｜链路｜)(?!.*(?:×|x)\s*(?:3|10)|.*(?:3|10)\s*倍).*(?:🇭🇰|香港|(\b(HK|Hong)\b))'
   include-all: true
 - name: United States
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/United_States.png
   type: url-test
-  interval: 120
-  tolerance: 50
-  lazy: false
+  interval: 600
+  tolerance: 100
+  lazy: true
   filter: '(?i)^(?!.*静态IP｜链路｜)(?!.*(?:×|x)\s*(?:3|10)|.*(?:3|10)\s*倍).*(?:🇺🇸|美国|洛杉矶|圣何塞|(\b(US|United States)\b))'
   include-all: true
 - name: Singapore
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Singapore.png
   type: url-test
-  interval: 120
-  tolerance: 50
-  lazy: false
+  interval: 600
+  tolerance: 100
+  lazy: true
   filter: '(?i)^(?!.*静态IP｜链路｜)(?!.*(?:×|x)\s*(?:3|10)|.*(?:3|10)\s*倍).*(?:🇸🇬|新加坡|狮|(\b(SG|Singapore)\b))'
   include-all: true
 - name: Japan
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Japan.png
   type: url-test
-  interval: 120
-  tolerance: 50
-  lazy: false
+  interval: 600
+  tolerance: 100
+  lazy: true
   filter: '(?i)^(?!.*静态IP｜链路｜)(?!.*(?:×|x)\s*(?:3|10)|.*(?:3|10)\s*倍).*(?:🇯🇵|日本|东京|(\b(JP|Japan)\b))'
   include-all: true
 - name: Taiwan
   icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/China.png
   type: url-test
-  interval: 120
-  tolerance: 50
-  lazy: false
+  interval: 600
+  tolerance: 100
+  lazy: true
   filter: '(?i)^(?!.*静态IP｜链路｜)(?!.*(?:×|x)\s*(?:3|10)|.*(?:3|10)\s*倍).*(?:🇨🇳|🇹🇼|台湾|(\b(TW|Tai|Taiwan)\b))'
   include-all: true
 - name: tailscale
